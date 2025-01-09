@@ -1,15 +1,4 @@
 #pragma once
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
-#include <boost/system/system_error.hpp>
-#include <boost/date_time.hpp>
-#include <exception>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <stdexcept>
-#include "socket.hpp"
-#include "yencdecode.hpp"
 
 namespace cppnntp
 {
@@ -40,7 +29,7 @@ namespace cppnntp
 		 * 
 		 * @param output = Turn cli output on or off.
 		 */
-		bool clioutput(const bool &output = false);
+		void clioutput(const bool &output = false);
 
 		/**
 		 * Connects to usenet.
@@ -508,7 +497,7 @@ namespace cppnntp
 		 *
 		 * @private
 		 */
-		socket sock;
+		class socket* sock;
 
 		/**
 		 * Did we already parse the overview format?

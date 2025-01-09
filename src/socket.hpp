@@ -1,8 +1,10 @@
 #pragma once
+
+#include <iostream>
+
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <boost/asio/ssl.hpp>
-#include <iostream>
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
@@ -25,11 +27,11 @@ namespace cppnntp
 		bool echocli;
 
 		/**
-		 * Asio io_service, required for passing tasks to the socket.
+		 * Asio io_context, required for passing tasks to the socket.
 		 *
 		 * @private
 		 */
-		boost::asio::io_service io_service;
+		boost::asio::io_context io_service;
 
 		/**
 		 * SSL socket.
@@ -75,7 +77,7 @@ namespace cppnntp
 		 * 
 		 * @param output = Turn cli output on or off.
 		 */
-		bool clioutput(const bool &output = false);
+		void clioutput(const bool &output = false);
 
 		/**
 		 * Toggle compression status.

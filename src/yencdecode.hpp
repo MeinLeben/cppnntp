@@ -1,7 +1,9 @@
 #pragma once
+
+#include <iostream>
+
 #include <boost/regex.hpp>
 #include "boostRegexExceptions.hpp"
-#include <iostream>
 
 namespace cppnntp
 {

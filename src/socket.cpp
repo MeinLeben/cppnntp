@@ -1,4 +1,5 @@
 #include "socket.hpp"
+
 namespace cppnntp {
 	/**
 	 * Constructor.
@@ -25,7 +26,7 @@ namespace cppnntp {
 	 * 
 	 * @param output = Turn cli output on or off.
 	 */
-	bool socket::clioutput(const bool &output) {
+	void socket::clioutput(const bool &output) {
 		echocli = output;
 	}
 
@@ -105,14 +106,13 @@ namespace cppnntp {
 		// Store boost error codes.
 		boost::system::error_code err;
 		// Create an endpoint to connnect a socket to and another to compare.
-		boost::asio::ip::tcp::resolver::iterator endpoint_iterator, endpoint;
-		// Query.
-		boost::asio::ip::tcp::resolver::query query(hostname, port);
+		boost::asio::ip::tcp::resolver::results_type endpoints;
+
 		// Resolver to resolve the query.
 		boost::asio::ip::tcp::resolver resolver(io_service);
 
 		try {
-			endpoint_iterator = resolver.resolve(query, err);
+			endpoints = resolver.resolve(hostname, port, err);
 		} catch (boost::system::system_error& error) {
 			throw NNTPSockException(error.what());
 			return false;
@@ -123,7 +123,8 @@ namespace cppnntp {
 
 		tcp_sock = new unsecure(io_service);
 		// loop through the available endpoints until we can connect without an error
-		while (endpoint_iterator != endpoint) {
+		auto endpoint_iterator = endpoints.begin();
+		while (endpoint_iterator != endpoints.end()) {
 			// try to connect to the endpoint and do a handshake
 			if (!tcp_sock->connect(*endpoint_iterator, err)) {
 				// Verify the NNTP response and return.
@@ -190,17 +191,16 @@ namespace cppnntp {
 		// Store boost error codes.
 		boost::system::error_code err;
 		// Create an endpoint to connnect a socket to and another to compare.
-		boost::asio::ip::tcp::resolver::iterator endpoint_iterator, endpoint;
+		boost::asio::ip::tcp::resolver::results_type endpoints;
 		// SSL context.
-		boost::asio::ssl::context context(io_service, ssl_context::sslv23);
-		// Query.
-		boost::asio::ip::tcp::resolver::query query(hostname, port);
+		boost::asio::ssl::context context(ssl_context::sslv23);
+
 		// Resolver to resolve the query.
 		boost::asio::ip::tcp::resolver resolver(io_service);
 
 		// Try to resolve the query.
 		try {
-			endpoint_iterator = resolver.resolve(query, err);
+			endpoints = resolver.resolve(hostname, port);
 		} catch (boost::system::system_error& error) {
 			throw NNTPSockException(error.what());
 			return false;
@@ -211,7 +211,8 @@ namespace cppnntp {
 
 		ssl_sock = new secure(io_service, context);
 		// loop through the available endpoints until we can connect without an error
-		while (endpoint_iterator != endpoint) {
+		auto endpoint_iterator = endpoints.begin();
+		while (endpoint_iterator != endpoints.end()) {
 			// try to connect to the endpoint and do a handshake
 			if (!ssl_sock->lowest_layer().connect(*endpoint_iterator, err)
 				&& !ssl_sock->handshake(boost::asio::ssl::stream_base::client, err)) {

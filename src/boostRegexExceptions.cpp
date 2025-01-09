@@ -1,4 +1,7 @@
+#include <iostream>
+
 #include <boost/regex.hpp>
+
 void boostRegexExceptions(boost::regex_error e)
 {
 	std::cerr << "Regex Error: ";

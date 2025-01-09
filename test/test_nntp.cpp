@@ -1,4 +1,4 @@
-#include "examples.hpp"
+#include "test_nntp.hpp"
 
 cppnntp::nntp nntp;
 

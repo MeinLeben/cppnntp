@@ -1,10 +1,13 @@
 #pragma once
-#include <fstream>
+
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
-#include <boost/regex.hpp>
 #include <stdexcept>
-#include "cppnntp/nntp.hpp"
+
+#include <boost/regex.hpp>
+
+#include <nntp.hpp>
 
 std::string NNTP_USER = "";
 std::string NNTP_PASS = "";

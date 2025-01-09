@@ -1,19 +1,25 @@
-cmake_minimum_required(VERSION 2.8.11)
-project(cppnntp)
+cmake_minimum_required(VERSION 3.16)
 
-if(("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang"))
-    set(CMAKE_CXX_FLAGS "-std=c++11")
-endif()
+set(PROJECT_NAME cppnntp)
 
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.55 REQUIRED
-    COMPONENTS date_time iostreams regex system)
+project(${PROJECT_NAME} LANGUAGES CXX)
 
-add_subdirectory(cppnntp)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
-add_executable(example examples.cpp examples.hpp)
-add_dependencies(example cppnntp)
-target_include_directories(example PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(example cppnntp)
+find_package(OpenSSL)
+
+find_package(Boost 1.87 REQUIRED COMPONENTS system iostreams)
+
+set(SOURCE
+	src/boostRegexExceptions.cpp
+	src/nntp.cpp
+	src/socket.cpp
+	src/yencdecode.cpp
+)
+
+add_library(${PROJECT_NAME} ${SOURCE})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Boost::system Boost::iostreams ${OPENSSL_LIBRARIES})
+
+add_subdirectory(test)
