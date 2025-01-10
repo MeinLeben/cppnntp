@@ -11,7 +11,7 @@ Requirements:
 
 Zlib is for header compression.
 
-Boost 1.49+
+Boost 1.87+
 
 openssl for SSL connections
 
